@@ -16,6 +16,7 @@ let peachImage,
 let fruits = [];
 let handTap = false;
 let currentImageNumber = 0;
+let canYouSeeMeNow = false;
 
 const FOREHEAD_POINT = 151;
 const LEFT_FOREHEAD = 104;
@@ -69,7 +70,7 @@ function setup() {
   //ml5 function
   facemesh.on("predict", (results) => {
     //results is an array, we care about the first object only, results = 0
-    console.log(results[0]);
+    // console.log(results[0]);
     latestPrediction = results[0];
   });
 
@@ -130,16 +131,24 @@ function draw() {
     imageWidth,
     imageHeight
   );
+  // leftEyeHoleMask
+  imageMode(CORNER);
+  let eyeholeMask = createEyeholeMask();
+  let leftEyeHoleMask = createLeftEyeHoleMask();
+  let mouthHoleMask = createMouthHoleMask();
 
-  
-  //-----------------Drawings of eyes and mouth----------------
-  // imageMode(CORNER);
-  // ellipse(leftEyeLocation[0], leftEyeLocation[1], 20, 15);
-  // ellipse(rightEyeLocation[0], rightEyeLocation[1], 20, 15);
-  // ellipse(mouthLocation[0], mouthLocation[1], 20, 15);
-  // 0 is the x cordinate, y is the y cordinate
+  let webcamCopy = video.get(); // get a new copy of the webcam image
+  let webcamCopy2 = video.get();
+  let webcamCopy3 = video.get();
+  webcamCopy.mask(leftEyeHoleMask); // apply the eyehole mask
+  webcamCopy2.mask(eyeholeMask);
+  webcamCopy3.mask(mouthHoleMask);
+
+  // webcamCopy.mask(eyeholeMask)
+  image(webcamCopy, 0, 0, width, height); // draw eye on top of the full face covering
+  image(webcamCopy2, 0, 0, width, height);
+  image(webcamCopy3, 0, 0, width, height);
 }
-
 
 function createEyeholeMask() {
   let eyeholeMask = createGraphics(width, height); // draw into a "graphics" object instead of the canvas directly
@@ -165,4 +174,49 @@ function createEyeholeMask() {
   eyeholeMask.endShape(CLOSE); // CLOSE makes sure we join back to the beginning
 
   return eyeholeMask;
+}
+
+function createLeftEyeHoleMask() {
+  let leftEyeHoleMask = createGraphics(width, height); // draw into a "graphics" object instead of the canvas directly
+  leftEyeHoleMask.background("rgba(255,255,255,0)"); // transparent background (zero alpha)
+  leftEyeHoleMask.noStroke();
+
+  // get the eyehole points from the facemesh
+  let leftEyeUpper = latestPrediction.annotations.leftEyeUpper1;
+  let leftEyeLower = [
+    ...latestPrediction.annotations.leftEyeLower1,
+  ].reverse(); /* note that we have to reverse one of the arrays so that the shape draws properly */
+
+  // draw the actual shape
+  leftEyeHoleMask.beginShape();
+  // draw from left to right along the top of the eye
+  leftEyeUpper.forEach((point) => {
+    leftEyeHoleMask.curveVertex(point[0 /* x */], point[1 /* y */]); // using curveVertex for smooth lines
+  });
+  // draw back from right to left along the bottom of the eye
+  leftEyeLower.forEach((point) => {
+    leftEyeHoleMask.curveVertex(point[0 /* x */], point[1 /* y */]);
+  });
+  leftEyeHoleMask.endShape(CLOSE); // CLOSE makes sure we join back to the beginning
+
+  return leftEyeHoleMask;
+}
+
+function createMouthHoleMask() {
+  let mouthHoleMask = createGraphics(width, height);
+  mouthHoleMask.background("rgba(255,255,255,0)");
+  mouthHoleMask.noStroke();
+
+  let mouthUpper = latestPrediction.annotations.lipsUpperOuter;
+  let mouthLower = [...latestPrediction.annotations.lipsLowerOuter].reverse();
+
+  mouthHoleMask.beginShape();
+  mouthUpper.forEach((point) => {
+    mouthHoleMask.curveVertex(point[0], point[1]);
+  });
+  mouthLower.forEach((point) => {
+    mouthHoleMask.curveVertex(point[0], point[1]);
+  });
+  mouthHoleMask.endShape(CLOSE);
+  return mouthHoleMask;
 }
