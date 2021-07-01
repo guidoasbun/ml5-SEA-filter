@@ -81,7 +81,7 @@ function draw() {
   if (modelIsLoading) {
     image(fruitBasket, 0, 0, width, height);
   }
-  
+
   let currentImage = fruits[currentImageNumber];
 
   //Draw webcam video
@@ -121,9 +121,23 @@ function draw() {
 
   //Sets up the mask for the holes in eyes and mouth
   imageMode(CORNER);
-  let rightEyeHoleMask = createRightEyeHoleMask();
-  let leftEyeHoleMask = createLeftEyeHoleMask();
-  let mouthHoleMask = createMouthHoleMask();
+
+  const rightEyeLocation = [
+    latestPrediction.annotations.rightEyeUpper1,
+    latestPrediction.annotations.rightEyeLower1,
+  ];
+  const leftEyeLocation = [
+    latestPrediction.annotations.leftEyeUpper1,
+    latestPrediction.annotations.leftEyeLower1,
+  ];
+  const mouthLocation = [
+    latestPrediction.annotations.lipsUpperOuter,
+    latestPrediction.annotations.lipsLowerOuter,
+  ];
+
+  let rightEyeHoleMask = createHoleMask(rightEyeLocation[0], rightEyeLocation[1]);
+  let leftEyeHoleMask = createHoleMask(leftEyeLocation[0], leftEyeLocation[1]);
+  let mouthHoleMask = createHoleMask(mouthLocation[0], mouthLocation[1]);
 
   let webcamCopy = video.get(); // get a new copy of the webcam image
   let webcamCopy2 = video.get();
@@ -148,71 +162,24 @@ function getWidth(leftLocation, rightLocation) {
   return width;
 }
 
-function createRightEyeHoleMask() {
+function createHoleMask(upper, lower) {
   //Sets the seeMe variabel back to true because latestPrediction in no longer null
   seeMe = true;
 
-  let rightEyeHoleMask = createGraphics(width, height); // draw into a "graphics" object instead of the canvas directly
-  rightEyeHoleMask.background("rgba(255,255,255,0)"); // transparent background (zero alpha)
-  rightEyeHoleMask.noStroke();
+  let maskHole = createGraphics(width, height);
+  maskHole.background("rgba(255,255,255,0)");
+  maskHole.noStroke();
 
-  // get the eyehole points from the facemesh
-  let rightEyeUpper = latestPrediction.annotations.rightEyeUpper1;
-  let rightEyeLower = [
-    ...latestPrediction.annotations.rightEyeLower1,
-  ].reverse(); /* note that we have to reverse one of the arrays so that the shape draws properly */
+  let mUpper = upper;
+  let mLower = [...lower].reverse();
 
-  // draw the actual shape
-  rightEyeHoleMask.beginShape();
-  // draw from left to right along the top of the eye
-  rightEyeUpper.forEach((point) => {
-    rightEyeHoleMask.curveVertex(point[0 /* x */], point[1 /* y */]); // using curveVertex for smooth lines
+  maskHole.beginShape();
+  mUpper.forEach((point) => {
+    maskHole.curveVertex(point[0], point[1]);
   });
-  // draw back from right to left along the bottom of the eye
-  rightEyeLower.forEach((point) => {
-    rightEyeHoleMask.curveVertex(point[0 /* x */], point[1 /* y */]);
+  mLower.forEach((point) => {
+    maskHole.curveVertex(point[0], point[1]);
   });
-  rightEyeHoleMask.endShape(CLOSE); // CLOSE makes sure we join back to the beginning
-
-  return rightEyeHoleMask;
-}
-
-function createLeftEyeHoleMask() {
-  let leftEyeHoleMask = createGraphics(width, height);
-  leftEyeHoleMask.background("rgba(255,255,255,0)");
-  leftEyeHoleMask.noStroke();
-
-  let leftEyeUpper = latestPrediction.annotations.leftEyeUpper1;
-  let leftEyeLower = [...latestPrediction.annotations.leftEyeLower1].reverse();
-
-  leftEyeHoleMask.beginShape();
-  leftEyeUpper.forEach((point) => {
-    leftEyeHoleMask.curveVertex(point[0], point[1]);
-  });
-
-  leftEyeLower.forEach((point) => {
-    leftEyeHoleMask.curveVertex(point[0], point[1]);
-  });
-  leftEyeHoleMask.endShape(CLOSE);
-
-  return leftEyeHoleMask;
-}
-
-function createMouthHoleMask() {
-  let mouthHoleMask = createGraphics(width, height);
-  mouthHoleMask.background("rgba(255,255,255,0)");
-  mouthHoleMask.noStroke();
-
-  let mouthUpper = latestPrediction.annotations.lipsUpperOuter;
-  let mouthLower = [...latestPrediction.annotations.lipsLowerOuter].reverse();
-
-  mouthHoleMask.beginShape();
-  mouthUpper.forEach((point) => {
-    mouthHoleMask.curveVertex(point[0], point[1]);
-  });
-  mouthLower.forEach((point) => {
-    mouthHoleMask.curveVertex(point[0], point[1]);
-  });
-  mouthHoleMask.endShape(CLOSE);
-  return mouthHoleMask;
+  maskHole.endShape(CLOSE);
+  return maskHole;
 }
