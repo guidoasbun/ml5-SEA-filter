@@ -12,7 +12,8 @@ let peachImage,
   plumImage,
   pomegranateImage,
   strawberryImage,
-  watermelonImage;
+  watermelonImage,
+  fruitBasket;
 let fruits = [];
 let handTap = false;
 let currentImageNumber = 0;
@@ -36,6 +37,7 @@ function preload() {
   pomegranateImage = loadImage("/assets/images/pomegranate.png");
   strawberryImage = loadImage("/assets/images/strawberry.png");
   watermelonImage = loadImage("/assets/images/watermelon.png");
+  fruitBasket = loadImage("/assets/images/fruitBasket.png");
   fruits = [
     peachImage,
     appleImage,
@@ -75,9 +77,11 @@ function setup() {
 
 //p5 function
 function draw() {
-  //if (modelIsLoading)
   // show loading screen
-
+  if (modelIsLoading) {
+    image(fruitBasket, 0, 0, width, height);
+  }
+  
   let currentImage = fruits[currentImageNumber];
 
   //Draw webcam video
@@ -108,7 +112,7 @@ function draw() {
     rightForeheadLocation[1]
   );
 
-  let imageWidth = foreheadWidth * 3.5;
+  let imageWidth = foreheadWidth * 4;
 
   let imageHeight = (currentImage.height / currentImage.width) * imageWidth;
 
@@ -117,11 +121,11 @@ function draw() {
   image(
     currentImage,
     foreheadLoaction[0],
-    foreheadLoaction[1] - imageHeight / 18,
+    foreheadLoaction[1] - imageHeight / 20,
     imageWidth,
     imageHeight
   );
-  
+
   //Sets up the mask for the holes in eyes and mouth
   imageMode(CORNER);
   let rightEyeHoleMask = createRightEyeHoleMask();
@@ -148,7 +152,6 @@ function createRightEyeHoleMask() {
   let rightEyeHoleMask = createGraphics(width, height); // draw into a "graphics" object instead of the canvas directly
   rightEyeHoleMask.background("rgba(255,255,255,0)"); // transparent background (zero alpha)
   rightEyeHoleMask.noStroke();
-  
 
   // get the eyehole points from the facemesh
   let rightEyeUpper = latestPrediction.annotations.rightEyeUpper1;
@@ -172,16 +175,12 @@ function createRightEyeHoleMask() {
 }
 
 function createLeftEyeHoleMask() {
-  let leftEyeHoleMask = createGraphics(width, height); 
+  let leftEyeHoleMask = createGraphics(width, height);
   leftEyeHoleMask.background("rgba(255,255,255,0)");
   leftEyeHoleMask.noStroke();
 
-
   let leftEyeUpper = latestPrediction.annotations.leftEyeUpper1;
-  let leftEyeLower = [
-    ...latestPrediction.annotations.leftEyeLower1,
-  ].reverse(); 
-
+  let leftEyeLower = [...latestPrediction.annotations.leftEyeLower1].reverse();
 
   leftEyeHoleMask.beginShape();
   leftEyeUpper.forEach((point) => {
