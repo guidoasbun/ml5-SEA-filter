@@ -93,7 +93,7 @@ function draw() {
     if (seeMe) {
       currentImageNumber++;
       seeMe = false;
-      if (currentImageNumber === fruits.length - 1) {
+      if (currentImageNumber === fruits.length) {
         currentImageNumber = 0;
       }
     }
@@ -105,15 +105,8 @@ function draw() {
   let leftForeheadLocation = latestPrediction.scaledMesh[LEFT_FOREHEAD];
   let rightForeheadLocation = latestPrediction.scaledMesh[RIGHT_FOREHEAD];
 
-  let foreheadWidth = dist(
-    leftForeheadLocation[0],
-    leftForeheadLocation[1],
-    rightForeheadLocation[0],
-    rightForeheadLocation[1]
-  );
-
+  let foreheadWidth = getWidth(leftForeheadLocation, rightForeheadLocation);
   let imageWidth = foreheadWidth * 4;
-
   let imageHeight = (currentImage.height / currentImage.width) * imageWidth;
 
   //Draws the current image
@@ -143,6 +136,16 @@ function draw() {
   image(webcamCopy, 0, 0, width, height);
   image(webcamCopy2, 0, 0, width, height);
   image(webcamCopy3, 0, 0, width, height);
+}
+
+function getWidth(leftLocation, rightLocation) {
+  let width = dist(
+    leftLocation[0],
+    leftLocation[1],
+    rightLocation[0],
+    rightLocation[1]
+  );
+  return width;
 }
 
 function createRightEyeHoleMask() {
