@@ -114,7 +114,7 @@ function draw() {
   image(
     currentImage,
     foreheadLoaction[0],
-    foreheadLoaction[1] - imageHeight / 20,
+    foreheadLoaction[1] - imageHeight / 30,
     imageWidth,
     imageHeight
   );
