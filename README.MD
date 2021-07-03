@@ -1,4 +1,4 @@
-# Reverse Engineered Snap Lens
+# Fruit Salad Lens
 
 ![Project Image](https://git-readme-images.s3.amazonaws.com/snap-lens.png)
 
@@ -10,9 +10,10 @@ A Snap Lens created in the Snap Engineering Academy that cycles through fruit im
 
 ## How To Use
 
-1. Go to website - TBD
-2. Cover up the camera or cover your face to cycle through the fruit images
-3. Have fun!!!
+1. Go to website - [Fruit Salad Lens](https://master.d3vg7evzr2kth2.amplifyapp.com/)
+2. Click on yes if asked to allow the usage of a lens
+3. Cover up the camera or cover your face to cycle through the fruit images
+4. Have fun!!!
 
 #### Technologies
 
@@ -22,6 +23,7 @@ A Snap Lens created in the Snap Engineering Academy that cycles through fruit im
 - HTML
 - CSS
 - Machine Learning through ml5
+- Deployed on AWS Amplify
 
 ## Author Info
 
