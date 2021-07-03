@@ -25,19 +25,19 @@ const RIGHT_FOREHEAD = 333;
 
 //p5 function
 function preload() {
-  peachImage = loadImage("/assets/images/peach.png");
-  appleImage = loadImage("/assets/images/apple.png");
-  bananasImage = loadImage("/assets/images/bananas.png");
-  mangoImage = loadImage("/assets/images/mango.png");
-  orangeImage = loadImage("/assets/images/orange.png");
-  pearImage = loadImage("/assets/images/pear.png");
-  pear2Image = loadImage("/assets/images/pear2.png");
-  pinapleImage = loadImage("/assets/images/pinaple.png");
-  plumImage = loadImage("/assets/images/plum.png");
-  pomegranateImage = loadImage("/assets/images/pomegranate.png");
-  strawberryImage = loadImage("/assets/images/strawberry.png");
-  watermelonImage = loadImage("/assets/images/watermelon.png");
-  fruitBasket = loadImage("/assets/images/fruitBasket.png");
+  peachImage = loadImage("/assets/images/peachS.png");
+  appleImage = loadImage("/assets/images/appleS.png");
+  bananasImage = loadImage("/assets/images/bananasS.png");
+  mangoImage = loadImage("/assets/images/mangoS.png");
+  orangeImage = loadImage("/assets/images/orangeS.png");
+  pearImage = loadImage("/assets/images/pearS.png");
+  pear2Image = loadImage("/assets/images/pear2S.png");
+  pinapleImage = loadImage("/assets/images/pinapleS.png");
+  plumImage = loadImage("/assets/images/plumS.png");
+  pomegranateImage = loadImage("/assets/images/pomegranateS.png");
+  strawberryImage = loadImage("/assets/images/strawberryS.png");
+  watermelonImage = loadImage("/assets/images/watermelonS.png");
+  fruitBasket = loadImage("/assets/images/fruitBasketS.png");
   fruits = [
     peachImage,
     appleImage,
