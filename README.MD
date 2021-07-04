@@ -11,6 +11,7 @@ A Snap Lens created in the Snap Engineering Academy that cycles through fruit im
 ## How To Use
 
 1. Go to website - [Fruit Salad Lens](https://master.d3vg7evzr2kth2.amplifyapp.com/)
+    (This lens only works on desktop, it will not work on mobile)
 2. Click on yes if asked to allow the usage of a lens
 3. Cover up the camera or cover your face to cycle through the fruit images
 4. Have fun!!!
